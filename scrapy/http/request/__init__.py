@@ -205,4 +205,16 @@ def _find_method(obj, func):
             # https://docs.python.org/3/reference/datamodel.html
             if obj_func.__func__ is func.__func__:
                 return name
+
+        for name, obj_member in inspect.getmembers(obj):
+            if not inspect.ismethod(obj_member) and not name.startswith('_'):
+                member_methods = inspect.getmembers(
+                    obj_member,
+                    predicate=inspect.ismethod
+                )
+                for sub_name, sub_obj_func in member_methods:
+                    if sub_obj_func.__func__ is func.__func__:
+                        name = f"{name}.{sub_name}"
+                        return name
+
     raise ValueError(f"Function {func} is not an instance method in: {obj}")

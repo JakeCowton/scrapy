@@ -323,6 +323,13 @@ def _get_method(obj, name):
     """Helper function for request_from_dict"""
     name = str(name)
     try:
-        return getattr(obj, name)
+        if "." not in name:
+            return getattr(obj, name)
+        else:
+            components = name.split(".")
+            for component in components:
+                obj = getattr(obj, component)
+            return obj
+
     except AttributeError:
         raise ValueError(f"Method {name!r} not found in: {obj}")
