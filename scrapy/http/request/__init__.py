@@ -192,29 +192,17 @@ class Request(object_ref):
         return d
 
 
-def _find_method(obj, func):
+def _find_method(obj, func, curr_level=0, max_level=3):
     """Helper function for Request.to_dict"""
     # Only instance methods contain ``__func__``
-    if obj and hasattr(func, '__func__'):
-        members = inspect.getmembers(obj, predicate=inspect.ismethod)
-        for name, obj_func in members:
-            # We need to use __func__ to access the original function object because instance
-            # method objects are generated each time attribute is retrieved from instance.
-            #
-            # Reference: The standard type hierarchy
-            # https://docs.python.org/3/reference/datamodel.html
-            if obj_func.__func__ is func.__func__:
-                return name
-
+    if obj:
         for name, obj_member in inspect.getmembers(obj):
-            if not inspect.ismethod(obj_member) and not name.startswith('_'):
-                member_methods = inspect.getmembers(
-                    obj_member,
-                    predicate=inspect.ismethod
-                )
-                for sub_name, sub_obj_func in member_methods:
-                    if sub_obj_func.__func__ is func.__func__:
-                        name = f"{name}.{sub_name}"
-                        return name
-
-    raise ValueError(f"Function {func} is not an instance method in: {obj}")
+            if curr_level >= max_level:
+                continue
+            if inspect.ismethod(obj_member):
+                if obj_member.__func__ is func.__func__:
+                    return name
+            method = _find_method(obj_member, func, curr_level + 1, max_level)
+            if method:
+                name = f"{name}.{method}"
+                return name
