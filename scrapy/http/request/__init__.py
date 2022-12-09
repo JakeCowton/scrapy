@@ -207,4 +207,5 @@ def _find_method(obj, func, curr_level=0, max_level=3):
                 if method:
                     name = f"{name}.{method}"
                     return name
-    raise ValueError(f"Function {func} is not an instance method in: {obj}")
+    if curr_level == 0:
+        raise ValueError(f"Function {func} is not an instance method in: {obj}")
