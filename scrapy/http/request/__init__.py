@@ -197,12 +197,14 @@ def _find_method(obj, func, curr_level=0, max_level=3):
     # Only instance methods contain ``__func__``
     if obj:
         for name, obj_member in inspect.getmembers(obj):
-            if curr_level >= max_level:
-                continue
             if inspect.ismethod(obj_member):
                 if obj_member.__func__ is func.__func__:
                     return name
-            method = _find_method(obj_member, func, curr_level + 1, max_level)
-            if method:
-                name = f"{name}.{method}"
-                return name
+            else:
+                if curr_level >= max_level:
+                    continue
+                method = _find_method(obj_member, func, curr_level + 1, max_level)
+                if method:
+                    name = f"{name}.{method}"
+                    return name
+    raise ValueError(f"Function {func} is not an instance method in: {obj}")
