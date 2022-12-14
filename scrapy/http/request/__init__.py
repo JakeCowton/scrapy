@@ -197,6 +197,8 @@ def _find_method(obj, func, curr_level=0, max_level=3):
     # Only instance methods contain ``__func__``
     if obj:
         for name, obj_member in inspect.getmembers(obj):
+            if name.startswith("__") and name.endswith("__"):
+                continue
             if inspect.ismethod(obj_member):
                 if obj_member.__func__ is func.__func__:
                     return name
