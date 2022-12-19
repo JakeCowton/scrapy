@@ -52,7 +52,7 @@ Scrapy is written in pure Python and depends on a few key Python packages (among
 * `twisted`_, an asynchronous networking framework
 * `cryptography`_ and `pyOpenSSL`_, to deal with various network-level security needs
 
-Some of these packages themselves depend on non-Python packages
+Some of these packages themselves depends on non-Python packages
 that might require additional installation steps depending on your platform.
 Please check :ref:`platform-specific guides below <intro-install-platform-notes>`.
 
@@ -187,7 +187,7 @@ solutions:
   * Install `homebrew`_ following the instructions in https://brew.sh/
 
   * Update your ``PATH`` variable to state that homebrew packages should be
-    used before system packages (Change ``.bashrc`` to ``.zshrc`` accordingly
+    used before system packages (Change ``.bashrc`` to ``.zshrc`` accordantly
     if you're using `zsh`_ as default shell)::
 
       echo "export PATH=/usr/local/bin:/usr/local/sbin:$PATH" >> ~/.bashrc

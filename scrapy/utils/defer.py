@@ -26,7 +26,7 @@ from twisted.python import failure
 from twisted.python.failure import Failure
 
 from scrapy.exceptions import IgnoreRequest
-from scrapy.utils.reactor import is_asyncio_reactor_installed, get_asyncio_event_loop_policy
+from scrapy.utils.reactor import is_asyncio_reactor_installed
 
 
 def defer_fail(_failure: Failure) -> Deferred:
@@ -269,8 +269,7 @@ def deferred_from_coro(o) -> Any:
             return ensureDeferred(o)
         else:
             # wrapping the coroutine into a Future and then into a Deferred, this requires AsyncioSelectorReactor
-            event_loop = get_asyncio_event_loop_policy().get_event_loop()
-            return Deferred.fromFuture(asyncio.ensure_future(o, loop=event_loop))
+            return Deferred.fromFuture(asyncio.ensure_future(o))
     return o
 
 
@@ -321,8 +320,7 @@ def deferred_to_future(d: Deferred) -> Future:
                 d = treq.get('https://example.com/additional')
                 additional_response = await deferred_to_future(d)
     """
-    policy = get_asyncio_event_loop_policy()
-    return d.asFuture(policy.get_event_loop())
+    return d.asFuture(asyncio.get_event_loop())
 
 
 def maybe_deferred_to_future(d: Deferred) -> Union[Deferred, Future]:

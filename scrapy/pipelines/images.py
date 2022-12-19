@@ -160,14 +160,7 @@ class ImagesPipeline(FilesPipeline):
 
         if size:
             image = image.copy()
-            try:
-                # Image.Resampling.LANCZOS was added in Pillow 9.1.0
-                # remove this try except block,
-                # when updating the minimum requirements for Pillow.
-                resampling_filter = self._Image.Resampling.LANCZOS
-            except AttributeError:
-                resampling_filter = self._Image.ANTIALIAS
-            image.thumbnail(size, resampling_filter)
+            image.thumbnail(size, self._Image.ANTIALIAS)
 
         buf = BytesIO()
         image.save(buf, 'JPEG')
